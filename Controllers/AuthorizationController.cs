@@ -36,9 +36,18 @@ namespace Authentication_Authorization.Controllers
         }
 
         [HttpGet]
-        [Route("Get-Users")]
-        [CustomAuthorization(nameof(ConstantValues.Roles.SuperAdmin), nameof(ConstantValues.Roles.Admin))]
-        public async Task<IActionResult> GetUsers()
+        [Route("Get-Users-admin")]
+        [CustomAuthorization(nameof(ConstantValues.Roles.superadmin), nameof(ConstantValues.Roles.admin))]
+        public async Task<IActionResult> GetUsersForAdmin()
+        {
+            var response = await _authenticationServices.GetUsers();
+            return Ok(response);
+        }
+
+        [HttpGet]
+        [Route("Get-Users-user")]
+        [CustomAuthorization(nameof(ConstantValues.Roles.user))]
+        public async Task<IActionResult> GetUsersForUser()
         {
             var response = await _authenticationServices.GetUsers();
             return Ok(response);

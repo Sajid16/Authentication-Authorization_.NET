@@ -3,9 +3,9 @@
     public static class ConstantValues
     {
         public enum Roles {
-            Admin,
-            User,
-            SuperAdmin
+            admin,
+            user,
+            superadmin
         }
     }
 }
