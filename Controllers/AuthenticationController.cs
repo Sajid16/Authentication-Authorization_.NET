@@ -1,8 +1,5 @@
-﻿using Authentication_Authorization.Attributes;
-using Authentication_Authorization.Filters;
-using Authentication_Authorization.Services;
+﻿using Authentication_Authorization.Filters;
 using Authentication_Authorization.Utilities;
-using Authentication_Authorization.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,47 +10,32 @@ namespace Authentication_Authorization.Controllers
     [ServiceFilter(typeof(CustomAuthenticationFilter))]
     public class AuthenticationController : ControllerBase
     {
-        private readonly IAuthenticationServices _authenticationServices;
-
-        public AuthenticationController(IAuthenticationServices authenticationServices)
-        {
-            _authenticationServices = authenticationServices;
-        }
-
-
+        [HttpGet]
+        [Route("anonymous")]
         [AllowAnonymous]
-        [HttpPost]
-        [Route("Register-User")]
-        public async Task<IActionResult> Register(RegisteruserVM registeruserVM)
+        public async Task<IActionResult> AnonymousMethod()
         {
-            if (!ModelState.IsValid)
+            return new ObjectResult(new ApiReturnObj<object> {
+                IsSuccess = true,
+                Message = "Response from anonymous method."
+            }) 
             {
-                ApiReturnObj<object> apiReturnObj = new ApiReturnObj<object>();
-                apiReturnObj.Message = "validation error";
-                apiReturnObj.IsSuccess = false;
-                return BadRequest(apiReturnObj);
-            }
-
-            var response = await _authenticationServices.RegisterUsers(registeruserVM);
-            return Ok(response);
+                StatusCode = StatusCodes.Status200OK
+            };
         }
 
         [HttpGet]
-        [Route("Get-Users")]
-        [CustomAuthorization(nameof(ConstantValues.Roles.SuperAdmin), nameof(ConstantValues.Roles.Admin))]
-        public async Task<IActionResult> GetUsers()
+        [Route("not-anonymous")]
+        public async Task<IActionResult> NotAnonymousMethod()
         {
-            var response = await _authenticationServices.GetUsers();
-            return Ok(response);
-        }
-
-        [AllowAnonymous]
-        [HttpPost]
-        [Route("User-login")]
-        public async Task<IActionResult> UserLogin(LogInRequestVM logInRequestVM)
-        {
-            var response = await _authenticationServices.LogIn(logInRequestVM);
-            return Ok(response);
+            return new ObjectResult(new ApiReturnObj<object>
+            {
+                IsSuccess = false,
+                Message = "Response from not anonymous method."
+            })
+            {
+                StatusCode = StatusCodes.Status403Forbidden
+            };
         }
     }
 }
