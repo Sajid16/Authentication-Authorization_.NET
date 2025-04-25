@@ -45,6 +45,15 @@ namespace Authentication_Authorization.Controllers
         }
 
         [HttpGet]
+        [Route("Get-Users-policy-based-user")]
+        [CustomAuthorize("AdminOnlyPolicy")]
+        public async Task<IActionResult> GetUsersForPolicyBasedUser()
+        {
+            var response = await _authenticationServices.GetUsers();
+            return Ok(response);
+        }
+
+        [HttpGet]
         [Route("Get-Users-user")]
         [CustomAuthorization(nameof(ConstantValues.Roles.user))]
         public async Task<IActionResult> GetUsersForUser()

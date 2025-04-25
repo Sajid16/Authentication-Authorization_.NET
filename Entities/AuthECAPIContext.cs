@@ -17,6 +17,7 @@ namespace Authentication_Authorization.Entities
 
         public virtual DbSet<Role> Roles { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<RoleAccessPolicy> RoleAccessPolicies { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasAnnotation("Relational:Collation", "SQL_Latin1_General_CP1_CI_AS");
@@ -64,6 +65,16 @@ namespace Authentication_Authorization.Entities
                     .HasForeignKey(d => d.RoleId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__Users__RoleId__4BAC3F29");
+            });
+
+            modelBuilder.Entity<RoleAccessPolicy>(entity =>
+            {
+                entity.HasKey(e => e.PolicyKey)
+                    .HasName("PK__RoleAcce__7DF846F5E3266F5F");
+
+                entity.ToTable("RoleAccessPolicies", "auth");
+
+                entity.Property(e => e.PolicyKey).HasMaxLength(100);
             });
 
             OnModelCreatingPartial(modelBuilder);

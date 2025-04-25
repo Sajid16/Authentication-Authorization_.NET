@@ -21,6 +21,7 @@ builder.Services.AddDbContext<AuthECAPIContext>(options =>
 
 // Register Services
 builder.Services.AddScoped<IAuthenticationServices, AuthenticationServices>();
+builder.Services.AddScoped<IRoleAccessPolicyService, RoleAccessPolicyService>();
 
 // register filter
 builder.Services.AddScoped<CustomAuthenticationFilter>();
